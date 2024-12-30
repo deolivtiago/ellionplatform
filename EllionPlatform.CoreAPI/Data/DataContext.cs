@@ -1,9 +1,22 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using EllionPlatform.CoreAPI.Models;
 
-namespace EllionPlatform.CoreAPI.Data
+namespace EllionPlatform.CoreAPI.Data;
+
+class DataContext(DbContextOptions<DataContext> options) : IdentityDbContext<User, Role, string>(options)
 {
-    class DataContext : DbContext
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Role>().ToTable("Roles");
+        modelBuilder.Entity<User>().ToTable("Users");
+        modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
+        modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+        modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+        modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+        modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
     }
 }
